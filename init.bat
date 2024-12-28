@@ -33,7 +33,6 @@ for %%F in (extractor.exe) do (
         exit /b 4
     )
 )
-paexec.exe
 REM Create running flag
 echo %datetime% > "%tempdir%\running.tmp"
 echo Starting process----------------------------------------
