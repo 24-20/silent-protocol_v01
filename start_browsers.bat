@@ -2,6 +2,7 @@
 setlocal EnableDelayedExpansion
 
 echo Starting browsers with session restoration...
+echo updated----------------------------
 
 REM Read the browser states JSON file
 if not exist "%~dp0results\browser_states.json" (
