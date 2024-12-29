@@ -2,7 +2,18 @@
 setlocal EnableDelayedExpansion
 
 echo Starting browsers with session restoration...
-echo updated----------------------------
+
+REM Set registry keys for Chrome session restore
+echo Configuring Chrome registry settings...
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome" /v "RestoreOnStartup" /t REG_DWORD /d "1" /f
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
+reg add "HKEY_CURRENT_USER\Software\Google\Chrome\Preferences" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
+
+REM Set registry keys for Edge session restore
+echo Configuring Edge registry settings...
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge" /v "RestoreOnStartup" /t REG_DWORD /d "1" /f
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Edge\Preferences" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
 
 REM Read the browser states JSON file
 if not exist "%~dp0results\browser_states.json" (
@@ -24,8 +35,8 @@ for /f "tokens=* usebackq" %%a in (`powershell -Command "(Get-Content '%~dp0resu
             --password-store=basic ^
             --no-first-run ^
             --restore-on-startup=4 ^
-            --startup-url="chrome://restore-tabs" ^
             --session-restore
+        timeout /t 2 /nobreak > nul
     )
     
     if "!browser!"=="edge" (
@@ -38,15 +49,13 @@ for /f "tokens=* usebackq" %%a in (`powershell -Command "(Get-Content '%~dp0resu
             --password-store=basic ^
             --no-first-run ^
             --restore-on-startup=4 ^
-            --startup-url="edge://restore-tabs" ^
             --session-restore
+        timeout /t 2 /nobreak > nul
     )
 )
 
-REM Wait a moment to ensure browsers have time to start restoration process
+REM Wait for browsers to initialize
 timeout /t 5 /nobreak > nul
 
-REM Simulate "Restore tabs" button click using AutoHotkey or similar tool if needed
-REM You might want to add this as a separate script
-
 echo Browser restart process completed.
+echo Note: If tabs are not restored automatically, you may need to use the restore button in the browser window.
