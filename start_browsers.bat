@@ -17,13 +17,11 @@ for /f "tokens=* usebackq" %%a in (`powershell -Command "(Get-Content '%~dp0resu
         echo Starting Chrome...
         start "" /B "C:\Program Files\Google\Chrome\Application\chrome.exe" ^
             --restore-last-session ^
-            --session-restore-standalone-timeout=120 ^
+            --session-restore-standalone-timeout=60 ^
             --disable-session-crashed-bubble ^
             --disable-features=TabGroups ^
             --password-store=basic ^
-            --no-first-run ^
-            --restore-on-startup=4 ^
-            --session-restore
+            --no-first-run
         timeout /t 2 /nobreak > nul
     )
     
@@ -31,13 +29,11 @@ for /f "tokens=* usebackq" %%a in (`powershell -Command "(Get-Content '%~dp0resu
         echo Starting Edge...
         start "" /B "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
             --restore-last-session ^
-            --session-restore-standalone-timeout=120 ^
+            --session-restore-standalone-timeout=60 ^
             --disable-session-crashed-bubble ^
             --disable-features=TabGroups ^
             --password-store=basic ^
-            --no-first-run ^
-            --restore-on-startup=4 ^
-            --session-restore
+            --no-first-run
         timeout /t 2 /nobreak > nul
     )
 )
@@ -46,4 +42,3 @@ REM Wait for browsers to initialize
 timeout /t 5 /nobreak > nul
 
 echo Browser restart process completed.
-echo Note: If tabs are not restored automatically, you may need to use the restore button in the browser window.
