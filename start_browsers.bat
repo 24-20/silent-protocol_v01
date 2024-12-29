@@ -3,18 +3,6 @@ setlocal EnableDelayedExpansion
 
 echo Starting browsers with session restoration...
 
-REM Set registry keys for Chrome session restore
-echo Configuring Chrome registry settings...
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome" /v "RestoreOnStartup" /t REG_DWORD /d "1" /f
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
-reg add "HKEY_CURRENT_USER\Software\Google\Chrome\Preferences" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
-
-REM Set registry keys for Edge session restore
-echo Configuring Edge registry settings...
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge" /v "RestoreOnStartup" /t REG_DWORD /d "1" /f
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
-reg add "HKEY_CURRENT_USER\Software\Microsoft\Edge\Preferences" /v "SessionRestoreEnabled" /t REG_DWORD /d "1" /f
-
 REM Read the browser states JSON file
 if not exist "%~dp0results\browser_states.json" (
     echo Browser states file not found
