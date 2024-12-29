@@ -12,7 +12,7 @@ if %ERRORLEVEL% NEQ 0 (
     echo Error: Failed to create temporary directory
     exit /b 2
 )
-mkdir "%tempdir%\result" 2>nul
+mkdir "%tempdir%\results" 2>nul
 if %ERRORLEVEL% NEQ 0 (
     echo Error: Failed to create result directory
     rmdir "%tempdir%" 2>nul
