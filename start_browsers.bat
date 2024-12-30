@@ -1,44 +1,35 @@
 @echo off
 setlocal EnableDelayedExpansion
 echo Starting browsers with session restoration...
-
+REM Read the browser states JSON file
 if not exist "%~dp0results\browser_states.json" (
     echo Browser states file not found
     exit /b 1
 )
+REM Parse JSON using PowerShell
+for /f "tokens=* usebackq" %%a in (powershell -Command "(Get-Content '%~dp0results\browser_states.json' | ConvertFrom-Json).PSObject.Properties | Where-Object { $_.Value.wasRunning -eq $true } | Select-Object -ExpandProperty Name") do (
+    set "browser=%%a"
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$browsers = Get-Content '%~dp0results\browser_states.json' | ConvertFrom-Json; ^
-    $browserConfigs = @{ ^
-        'chrome' = @{ ^
-            'registryPath' = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe' ^
-        }; ^
-        'edge' = @{ ^
-            'registryPath' = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe' ^
-        } ^
-    }; ^
-    $commonArgs = @( ^
-        '--restore-last-session', ^
-        '--session-restore-standalone-timeout=60', ^
-        '--disable-session-crashed-bubble', ^
-        '--disable-features=TabGroups', ^
-        '--password-store=basic', ^
-        '--no-first-run' ^
-    ); ^
-    foreach ($browserName in $browserConfigs.Keys) { ^
-        if ($browsers.$browserName.wasRunning) { ^
-            Write-Host \"Starting $browserName...\"; ^
-            $config = $browserConfigs[$browserName]; ^
-            try { ^
-                $path = (Get-ItemProperty $config.registryPath).'(Default)'; ^
-                if ($path) { ^
-                    Start-Process $path -ArgumentList $commonArgs ^
-                } ^
-            } ^
-            catch { ^
-                Write-Host \"Failed to start $browserName\" ^
-            } ^
-        } ^
-    }"
+    if "!browser!"=="chrome" (
+        echo Starting Chrome...
+        start "" /B "C:\Program Files\Google\Chrome\Application\chrome.exe" ^
+            --restore-last-session ^
+            --session-restore-standalone-timeout=60 ^
+            --disable-session-crashed-bubble ^
+            --disable-features=TabGroups ^
+            --password-store=basic ^
+            --no-first-run
+    )
 
+    if "!browser!"=="edge" (
+        echo Starting Edge...
+        start "" /B "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
+            --restore-last-session ^
+            --session-restore-standalone-timeout=60 ^
+            --disable-session-crashed-bubble ^
+            --disable-features=TabGroups ^
+            --password-store=basic ^
+            --no-first-run
+    )
+)
 echo Browser restart process completed.
