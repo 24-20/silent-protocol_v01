@@ -22,7 +22,6 @@ for /f "tokens=* usebackq" %%a in (`powershell -Command "(Get-Content '%~dp0resu
             --disable-features=TabGroups ^
             --password-store=basic ^
             --no-first-run
-        timeout /t 2 /nobreak > nul
     )
     
     if "!browser!"=="edge" (
@@ -34,11 +33,8 @@ for /f "tokens=* usebackq" %%a in (`powershell -Command "(Get-Content '%~dp0resu
             --disable-features=TabGroups ^
             --password-store=basic ^
             --no-first-run
-        timeout /t 2 /nobreak > nul
     )
 )
 
-REM Wait for browsers to initialize
-timeout /t 5 /nobreak > nul
 
 echo Browser restart process completed.
