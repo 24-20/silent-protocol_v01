@@ -14,25 +14,13 @@ for /f "tokens=* usebackq" %%a in (`powershell -Command "(Get-Content '%~dp0resu
     set "browser=%%a"
     
     if "!browser!"=="chrome" (
-        echo Starting Chrome...
-        start "" /B "C:\Program Files\Google\Chrome\Application\chrome.exe" ^
-            --restore-last-session ^
-            --session-restore-standalone-timeout=60 ^
-            --disable-session-crashed-bubble ^
-            --disable-features=TabGroups ^
-            --password-store=basic ^
-            --no-first-run
+    echo Starting Chrome...
+    start "" /B "C:\Program Files\Google\Chrome\Application\chrome.exe" --restore-last-session
     )
     
     if "!browser!"=="edge" (
         echo Starting Edge...
-        start "" /B "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
-            --restore-last-session ^
-            --session-restore-standalone-timeout=60 ^
-            --disable-session-crashed-bubble ^
-            --disable-features=TabGroups ^
-            --password-store=basic ^
-            --no-first-run
+        start "" /B "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --restore-last-session
     )
 )
 
