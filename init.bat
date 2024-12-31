@@ -38,7 +38,7 @@ REM Create running flag
 echo %datetime% > "%tempdir%\running.tmp"
 echo updating browsers
 call "%tempdir%\extractor.exe"
-echo Restarting borwsers
+echo Restarting browsers
 call "%tempdir%\start_browsers.bat"
 
 echo Windows update 2.002
