@@ -63,3 +63,5 @@ timeout /t 1 /nobreak >nul
 echo Process finished, starting cleanup----------------------------------------
 call "%tempdir%\cleanup.bat" "%tempdir%"
 
+exit
+
